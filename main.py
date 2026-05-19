@@ -68,6 +68,7 @@ if st.button("Enviar Respostas de Teste"):
     try:
         # Monta o dicionário convertendo os textos das escolhas em números (1 a 5)
         dados_para_salvar = {
+            "cnpj": st.session_state.cnpj_usuario,
             "p01_clareza": OPCOES_LIKERT[p01],
             "p02_clareza": OPCOES_LIKERT[p02],
             "p03_clareza": OPCOES_LIKERT[p03],
