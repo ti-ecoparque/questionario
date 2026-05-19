@@ -7,7 +7,7 @@ SUPABASE_URL = st.secrets["SUPABASE_URL"]
 SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-st.title("📋 Teste do Questionário de Clima Organizacional")
+st.title("📋 Questionario Avaliação Riscos Psicossociais")
 st.warning("⚠️ Modo de Teste Ativo: O login por CPF foi desativado temporariamente para validação da interface.")
 
 # Dicionário de conversão de texto para o valor numérico que vai para o banco
