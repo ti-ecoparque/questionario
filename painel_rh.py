@@ -102,17 +102,23 @@ else:
 
             st.markdown("---")
 
-            # 5. PERGUNTAS ABERTAS (FILTRADAS)
+            # 5. PERGUNTAS ABERTAS (FILTRADAS SEM DATA)
             st.subheader("✍️ 5. Respostas das Perguntas Abertas")
             
             tab1, tab2 = st.tabs(["Pontos Positivos (Pergunta A)", "Melhorias no Setor (Pergunta B)"])
             
             with tab1:
                 if 'p19_aberta_texto' in df.columns:
-                    df_p19 = df[['criado_em', 'p19_aberta_texto']].dropna()
+                    # Seleciona apenas a coluna do texto e remove linhas vazias
+                    df_p19 = df[['p19_aberta_texto']].dropna()
+                    # Renomeia o cabeçalho da tabela para ficar mais amigável na tela
+                    df_p19.columns = ["Respostas Computadas"]
                     st.dataframe(df_p19, use_container_width=True)
                     
             with tab2:
                 if 'p20_aberta_texto' in df.columns:
-                    df_p20 = df[['criado_em', 'p20_aberta_texto']].dropna()
+                    # Seleciona apenas a coluna do texto e remove linhas vazias
+                    df_p20 = df[['p20_aberta_texto']].dropna()
+                    # Renomeia o cabeçalho da tabela para ficar mais amigável na tela
+                    df_p20.columns = ["Respostas Computadas"]
                     st.dataframe(df_p20, use_container_width=True)
