@@ -48,13 +48,21 @@ if not st.session_state.logado:
             if len(res.data) == 0:
                 st.error("CPF não localizado na base de dados do RH.")
             else:
-                user = res.data[0]
+                user = res.data[0] # Pega o primeiro registro encontrado
                 
-                # CONVERSÃO: Transforma a data selecionada no formato DD/MM/YYYY
-                data_nasc_formatada = data_nasc.strftime("%d/%m/%Y")
+                # Gera todas as combinações possíveis com base na data que o usuário escolheu na tela
+                formatos_possiveis = [
+                    data_nasc.strftime("%Y-%m-%d"), # 1984-02-04 (Padrão do banco)
+                    data_nasc.strftime("%d-%m-%Y"), # 04-02-1984 (Com traço BR)
+                    data_nasc.strftime("%d%m%Y"),   # 04021984   (Apenas números)
+                    data_nasc.strftime("%d/%m/%Y")  # 04/02/1984 (Com barra BR)
+                ]
                 
-                # Se no banco de dados você salvou como texto "04/02/1984", a comparação abaixo funcionará perfeitamente
-                if user["data_nascimento"] != data_nasc_formatada:
+                # Pega a data exatamente como está escrita na coluna do Supabase
+                data_do_banco = str(user["data_nascimento"]).strip()
+                
+                # Verifica se a data do banco bate com QUALQUER um dos formatos gerados
+                if data_do_banco not in formatos_possiveis:
                     st.error("Data de nascimento incorreta.")
                 elif user["ja_respondeu"]:
                     st.warning("Você já respondeu a este questionário anteriormente.")
@@ -64,6 +72,7 @@ if not st.session_state.logado:
                     st.session_state.cpf_usuario = cpf
                     st.session_state.cnpj_usuario = user.get("cnpj", None)
                     st.rerun()
+
 
 
 # --- TELA DO QUESTIONÁRIO (SÓ APARECE APÓS LOGIN CORRETO) ---
