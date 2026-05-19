@@ -10,16 +10,20 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 SENHA_CORRETA_RH = st.secrets["SENHA_PAINEL_RH"]
 
-# --- FUNÇÃO PARA GERAR O PDF EM MEMÓRIA ---
+# --- FUNÇÃO PARA GERAR O PDF EM MEMÓRIA (CORRIGIDA COM UTF-8) ---
 def gerar_pdf(df_filtrado, cnpj_nome):
     pdf = FPDF()
     pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
     
-    # Título Principal
-    pdf.set_font("Arial", "B", 16)
+    # IMPORTANTE: Adiciona e ativa uma fonte que aceita acentos e caracteres especiais do PT-BR
+    pdf.add_font("DejaVu", "", "DejaVuSans.ttf", uni=True)
+    pdf.add_font("DejaVu", "B", "DejaVuSans-Bold.ttf", uni=True)
+    
+    # Título Principal (Usando a nova fonte "DejaVu")
+    pdf.set_font("DejaVu", "B", 16)
     pdf.cell(0, 10, "Relatório de Clima Organizacional - RH", ln=True, align="C")
-    pdf.set_font("Arial", "", 12)
+    pdf.set_font("DejaVu", "", 12)
     pdf.cell(0, 10, f"Unidade / CNPJ: {cnpj_nome}", ln=True, align="C")
     pdf.cell(0, 5, f"Total de Respondentes: {len(df_filtrado)}", ln=True, align="C")
     pdf.ln(10)
@@ -33,16 +37,16 @@ def gerar_pdf(df_filtrado, cnpj_nome):
     }
     
     # 1. Escreve as Médias das Perguntas Objetivas
-    pdf.set_font("Arial", "B", 14)
+    pdf.set_font("DejaVu", "B", 14)
     pdf.cell(0, 10, "MÉDIAS DAS RESPOSTAS OBJETIVAS (Escala de 1 a 5)", ln=True)
     pdf.line(10, pdf.get_y(), 200, pdf.get_y())
     pdf.ln(5)
     
-    pdf.set_font("Arial", "", 11)
+    pdf.set_font("DejaVu", "", 11)
     for grupo_nome, colunas in grupos.items():
-        pdf.set_font("Arial", "B", 11)
+        pdf.set_font("DejaVu", "B", 11)
         pdf.cell(0, 7, grupo_nome, ln=True)
-        pdf.set_font("Arial", "", 10)
+        pdf.set_font("DejaVu", "", 10)
         
         # Calcula médias do bloco
         medias = df_filtrado[colunas].mean()
@@ -56,20 +60,21 @@ def gerar_pdf(df_filtrado, cnpj_nome):
     pdf.ln(5)
     
     # 2. Escreve as Perguntas Abertas
-    pdf.set_font("Arial", "B", 14)
+    pdf.set_font("DejaVu", "B", 14)
     pdf.cell(0, 10, "RESPOSTAS DAS PERGUNTAS ABERTAS", ln=True)
     pdf.line(10, pdf.get_y(), 200, pdf.get_y())
     pdf.ln(5)
     
     # Pergunta A
-    pdf.set_font("Arial", "B", 11)
+    pdf.set_font("DejaVu", "B", 11)
     pdf.cell(0, 7, "Pontos Positivos (Pergunta A):", ln=True)
-    pdf.set_font("Arial", "", 10)
+    pdf.set_font("DejaVu", "", 10)
     if 'p19_aberta_texto' in df_filtrado.columns:
         respostas_p19 = df_filtrado['p19_aberta_texto'].dropna()
         if len(respostas_p19) > 0:
             for resp in respostas_p19:
-                pdf.multi_cell(0, 6, f"• {resp}")
+                # O multi_cell agora aceita acentuação de forma limpa e sem travar
+                pdf.multi_cell(0, 6, f"- {resp}")
                 pdf.ln(2)
         else:
             pdf.cell(0, 6, "Nenhuma resposta registrada.", ln=True)
@@ -77,20 +82,20 @@ def gerar_pdf(df_filtrado, cnpj_nome):
     pdf.ln(5)
     
     # Pergunta B
-    pdf.set_font("Arial", "B", 11)
+    pdf.set_font("DejaVu", "B", 11)
     pdf.cell(0, 7, "Melhorias no Setor (Pergunta B):", ln=True)
-    pdf.set_font("Arial", "", 10)
+    pdf.set_font("DejaVu", "", 10)
     if 'p20_aberta_texto' in df_filtrado.columns:
         respostas_p20 = df_filtrado['p20_aberta_texto'].dropna()
         if len(respostas_p20) > 0:
             for resp in respostas_p20:
-                pdf.multi_cell(0, 6, f"• {resp}")
+                pdf.multi_cell(0, 6, f"- {resp}")
                 pdf.ln(2)
         else:
             pdf.cell(0, 6, "Nenhuma resposta registrada.", ln=True)
 
-    # Retorna o arquivo como bytes
     return pdf.output()
+
 
 
 # --- CODIGOS DA INTERFACE ---
