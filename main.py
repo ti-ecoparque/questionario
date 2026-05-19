@@ -30,7 +30,13 @@ lista_opcoes = list(OPCOES_LIKERT.keys())
 if not st.session_state.logado:
     st.subheader("Por favor, identifique-se para responder:")
     cpf = st.text_input("Digite seu CPF (apenas números):", max_chars=11)
-    data_nasc = st.date_input("Sua data de nascimento / aniversário:", min_value=datetime(1940, 1, 1))
+    # Adicione o parâmetro format="DD/MM/YYYY" no final do componente
+    data_nasc = st.date_input(
+        "Sua data de nascimento / aniversário:", 
+        min_value=datetime(1940, 1, 1),
+        format="DD/MM/YYYY"
+    )
+
 
     if st.button("Entrar"):
         if not cpf:
