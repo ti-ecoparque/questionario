@@ -44,8 +44,11 @@ if not st.session_state.logado:
             else:
                 user = res.data[0]
                 
-                # Valida a data de nascimento como senha
-                if user["data_nascimento"] != str(data_nasc):
+                # CONVERSÃO: Transforma a data selecionada no formato DD/MM/YYYY
+                data_nasc_formatada = data_nasc.strftime("%d/%m/%Y")
+                
+                # Se no banco de dados você salvou como texto "04/02/1984", a comparação abaixo funcionará perfeitamente
+                if user["data_nascimento"] != data_nasc_formatada:
                     st.error("Data de nascimento incorreta.")
                 elif user["ja_respondeu"]:
                     st.warning("Você já respondeu a este questionário anteriormente.")
@@ -53,7 +56,7 @@ if not st.session_state.logado:
                     # Se tudo estiver correto, define as variáveis de sessão
                     st.session_state.logado = True
                     st.session_state.cpf_usuario = cpf
-                    st.session_state.cnpj_usuario = user.get("cnpj", None) # Captura o CNPJ cadastrado
+                    st.session_state.cnpj_usuario = user.get("cnpj", None)
                     st.rerun()
 
 
