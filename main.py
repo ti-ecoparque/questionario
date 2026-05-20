@@ -79,13 +79,37 @@ if not st.session_state.logado:
 else:
     st.success("Identificação validada com sucesso! Suas respostas serão salvas de forma 100% anônima por unidade.")
     
-    # --- GRUPO 1: CLAREZA DE FUNÇÕES E RESPONSABILIDADES ---
-    st.header("🔍 1. Clareza de Funções e Responsabilidades")
-    p01 = st.radio("Pergunta 1: Eu compreendo claramente quais são as minhas responsabilidades diárias.", lista_opcoes, index=2)
-    p02 = st.radio("Pergunta 2: Sei exatamente o que a liderança espera do meu desempenho profissional.", lista_opcoes, index=2)
-    p03 = st.radio("Pergunta 3: Os objetivos e metas do meu cargo são definidos de forma clara.", lista_opcoes, index=2)
-    p04 = st.radio("Pergunta 4: Entendo como o meu trabalho diário contribui para o sucesso da empresa.", lista_opcoes, index=2)
-    p05 = st.radio("Pergunta 5: Existe uma divisão justa de tarefas dentro da minha equipe de trabalho.", lista_opcoes, index=2)
+    # 1. TÍTULO EM CAIXA ALTA (Usando o .upper())
+    titulo_grupo1 = "🔍 1. Clareza de Funções e Responsabilidades"
+    st.header(titulo_grupo1.upper())
+
+    # --- PERGUNTA 1 ---
+    # Texto em caixa alta
+    txt_p01 = "Pergunta 1: Eu compreendo claramente quais são as minhas responsabilidades diárias."
+    # Markdown com HTML (Aumenta o tamanho usando font-size)
+    st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p01.upper()}</p>", unsafe_allow_html=True)
+    # st.radio agora fica sem texto interno, servindo apenas para exibir as opções
+    p01 = st.radio("", lista_opcoes, index=2, key="rad_p01", label_visibility="collapsed")
+
+    # --- PERGUNTA 2 ---
+    txt_p02 = "Pergunta 2: Sei exatamente o que a liderança espera do meu desempenho profissional."
+    st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p02.upper()}</p>", unsafe_allow_html=True)
+    p02 = st.radio("", lista_opcoes, index=2, key="rad_p02", label_visibility="collapsed")
+
+    # --- PERGUNTA 3 ---
+    txt_p03 = "Pergunta 3: Os objetivos e metas do meu cargo são definidos de forma clara."
+    st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p03.upper()}</p>", unsafe_allow_html=True)
+    p03 = st.radio("", lista_opcoes, index=2, key="rad_p03", label_visibility="collapsed")
+
+    # --- PERGUNTA 4 ---
+    txt_p04 = "Pergunta 4: Entendo como o meu trabalho diário contribui para o sucesso da empresa."
+    st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p04.upper()}</p>", unsafe_allow_html=True)
+    p04 = st.radio("", lista_opcoes, index=2, key="rad_p04", label_visibility="collapsed")
+
+    # --- PERGUNTA 5 ---
+    txt_p05 = "Pergunta 5: Existe uma divisão justa de tarefas dentro da minha equipe de trabalho."
+    st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p05.upper()}</p>", unsafe_allow_html=True)
+    p05 = st.radio("", lista_opcoes, index=2, key="rad_p05", label_visibility="collapsed")
 
     st.markdown("---")
 
