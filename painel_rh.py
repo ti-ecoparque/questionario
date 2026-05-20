@@ -10,12 +10,13 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 # Puxa a senha definida nas Secrets do Streamlit Cloud
 SENHA_CORRETA_RH = st.secrets["SENHA_PAINEL_RH"]
 
-# --- FUNÇÃO PARA GERAR O PDF EM MEMÓRIA (UNIFICADA) ---
+# --- FUNÇÃO PARA GERAR O PDF EM MEMÓRIA (ATUALIZADA COM PORCENTAGEM) ---
 def gerar_pdf(df_filtrado, filtro_nome):
     pdf = FPDF()
     pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
     
+    # Função interna para limpar o texto e garantir compatibilidade com latin-1
     def tratar_texto(texto):
         if not texto: 
             return ""
@@ -46,15 +47,20 @@ def gerar_pdf(df_filtrado, filtro_nome):
         pdf.line(10, pdf.get_y(), 200, pdf.get_y())
         pdf.ln(3)
         
-        # Calcula média do grupo inteiro
+        # CÁLCULO 1: Média do grupo inteiro e sua respectiva porcentagem
         grupo_media_geral = df_filtrado[colunas].mean().mean() if total_respostas > 0 else 0
+        grupo_porc_geral = (grupo_media_geral / 5.0) * 100
         
         for col in colunas:
             if col in df_filtrado.columns:
                 pdf.set_font("Helvetica", "B", 11)
-                # Calcula a média individual da pergunta
+                
+                # CÁLCULO 2: Média individual da pergunta e sua respectiva porcentagem
                 media_pergunta = df_filtrado[col].mean() if total_respostas > 0 else 0
-                pdf.cell(0, 6, tratar_texto(f"Indicador: {col.upper()} (Média: {media_pergunta:.2f} de 5.00)"), ln=True)
+                porc_pergunta = (media_pergunta / 5.0) * 100
+                
+                # Exibe indicador com Média e Porcentagem no PDF
+                pdf.cell(0, 6, tratar_texto(f"Indicador: {col.upper()} (Média: {media_pergunta:.2f} de 5.00 - {porc_pergunta:.1f}%)"), ln=True)
                 pdf.set_font("Helvetica", "", 10)
                 
                 contagem = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
@@ -71,9 +77,9 @@ def gerar_pdf(df_filtrado, filtro_nome):
                 pdf.multi_cell(0, 6, tratar_texto(detalhe_linha))
                 pdf.ln(2)
         
-        # Rodapé do grupo com a nota consolidada
+        # Rodapé do grupo atualizado com a nota consolidada e a porcentagem total
         pdf.set_font("Helvetica", "B", 11)
-        pdf.cell(0, 7, tratar_texto(f"--> MÉDIA CONSOLIDADA DO GRUPO: {grupo_media_geral:.2f} de 5.00"), ln=True)
+        pdf.cell(0, 7, tratar_texto(f"--> MÉDIA CONSOLIDADA DO GRUPO: {grupo_media_geral:.2f} de 5.00 ({grupo_porc_geral:.1f}%)"), ln=True)
         pdf.ln(6)
             
     pdf.ln(5)
@@ -99,6 +105,7 @@ def gerar_pdf(df_filtrado, filtro_nome):
         pdf.ln(3)
 
     return bytearray(pdf.output())
+
 
 
 # --- INTERFACE GRÁFICA ---
