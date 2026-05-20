@@ -69,7 +69,7 @@ def gerar_pdf(df_filtrado, cnpj_nome):
     
     # Pergunta A
     pdf.set_font("Helvetica", "B", 11)
-    pdf.cell(0, 7, tratar_texto("Pontos Positivos (Pergunta A):"), ln=True)
+    pdf.cell(0, 7, tratar_texto("Pergunta 19 Aberta:"), ln=True)
     pdf.set_font("Helvetica", "", 10)
     if 'p19_aberta_texto' in df_filtrado.columns:
         respostas_p19 = df_filtrado['p19_aberta_texto'].dropna()
@@ -84,7 +84,7 @@ def gerar_pdf(df_filtrado, cnpj_nome):
     
     # Pergunta B
     pdf.set_font("Helvetica", "B", 11)
-    pdf.cell(0, 7, tratar_texto("Melhorias no Setor (Pergunta B):"), ln=True)
+    pdf.cell(0, 7, tratar_texto("Pergunta 20 Aberta"), ln=True)
     pdf.set_font("Helvetica", "", 10)
     if 'p20_aberta_texto' in df_filtrado.columns:
         respostas_p20 = df_filtrado['p20_aberta_texto'].dropna()
