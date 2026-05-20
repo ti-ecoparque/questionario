@@ -84,29 +84,29 @@ else:
     st.header(titulo_grupo1.upper())
 
     # --- PERGUNTA 1 ---
-    txt_p01 = "Pergunta 1: Sei exatamente quais são minhas responsabilidades no trabalho."
+    txt_p01 = "1: Sei exatamente quais são minhas responsabilidades no trabalho."
     # Markdown com HTML (Aumenta o tamanho usando font-size)
     st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p01.upper()}</p>", unsafe_allow_html=True)
     # st.radio agora fica sem texto interno, servindo apenas para exibir as opções
     p01 = st.radio("", lista_opcoes, index=2, key="rad_p01", label_visibility="collapsed")
 
     # --- PERGUNTA 2 ---
-    txt_p02 = "As expectativas sobre meu desempenho são claras."
+    txt_p02 = "2: As expectativas sobre meu desempenho são claras."
     st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p02.upper()}</p>", unsafe_allow_html=True)
     p02 = st.radio("", lista_opcoes, index=2, key="rad_p02", label_visibility="collapsed")
 
     # --- PERGUNTA 3 ---
-    txt_p03 = "Recebo orientações claras sobre como executar minhas atividades."
+    txt_p03 = "3: Recebo orientações claras sobre como executar minhas atividades."
     st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p03.upper()}</p>", unsafe_allow_html=True)
     p03 = st.radio("", lista_opcoes, index=2, key="rad_p03", label_visibility="collapsed")
 
     # --- PERGUNTA 4 ---
-    txt_p04 = "Sei a quem recorrer quando tenho dúvidas sobre minhas tarefas."
+    txt_p04 = "4: Sei a quem recorrer quando tenho dúvidas sobre minhas tarefas."
     st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p04.upper()}</p>", unsafe_allow_html=True)
     p04 = st.radio("", lista_opcoes, index=2, key="rad_p04", label_visibility="collapsed")
 
     # --- PERGUNTA 5 ---
-    txt_p05 = "Pergunta 5: Mudanças nas minhas funções são comunicadas de forma clara."
+    txt_p05 = "5: Mudanças nas minhas funções são comunicadas de forma clara."
     st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p05.upper()}</p>", unsafe_allow_html=True)
     p05 = st.radio("", lista_opcoes, index=2, key="rad_p05", label_visibility="collapsed")
 
@@ -117,27 +117,27 @@ else:
     st.header(titulo_grupo2.upper())
 
     # --- PERGUNTA 6 ---
-    txt_p06 = "Pergunta 6: A comunicação interna é clara e objetiva."
+    txt_p06 = "6: A comunicação interna é clara e objetiva."
     st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p06.upper()}</p>", unsafe_allow_html=True)
     p06 = st.radio("", lista_opcoes, index=2, key="rad_p06", label_visibility="collapsed")
 
     # --- PERGUNTA 7 ---
-    txt_p07 = "Pergunta 7: Recebo as informações necessárias para realizar meu trabalho adequadamente."
+    txt_p07 = "7: Recebo as informações necessárias para realizar meu trabalho adequadamente."
     st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p07.upper()}</p>", unsafe_allow_html=True)
     p07 = st.radio("", lista_opcoes, index=2, key="rad_p07", label_visibility="collapsed")
 
     # --- PERGUNTA 8 ---
-    txt_p08 = "Pergunta 8: As informações importantes chegam em tempo hábil."
+    txt_p08 = "8: As informações importantes chegam em tempo hábil."
     st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p08.upper()}</p>", unsafe_allow_html=True)
     p08 = st.radio("", lista_opcoes, index=2, key="rad_p08", label_visibility="collapsed")
 
     # --- PERGUNTA 9 ---
-    txt_p09 = "Pergunta 9: Sinto-me à vontade para expressar opiniões ou dificuldades"
+    txt_p09 = "9: Sinto-me à vontade para expressar opiniões ou dificuldades"
     st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p09.upper()}</p>", unsafe_allow_html=True)
     p09 = st.radio("", lista_opcoes, index=2, key="rad_p09", label_visibility="collapsed")
 
     # --- PERGUNTA 10 ---
-    txt_p10 = "Pergunta 10: Há abertura para diálogo no ambiente de trabalho."
+    txt_p10 = "10: Há abertura para diálogo no ambiente de trabalho."
     st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p10.upper()}</p>", unsafe_allow_html=True)
     p10 = st.radio("", lista_opcoes, index=2, key="rad_p10", label_visibility="collapsed")
 
@@ -148,27 +148,27 @@ else:
     st.header(titulo_grupo3.upper())
 
     # --- PERGUNTA 11 ---
-    txt_p11 = "Pergunta 11: Meu gestor demonstra respeito no relacionamento com a equipe"
+    txt_p11 = "11: Meu gestor demonstra respeito no relacionamento com a equipe"
     st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p11.upper()}</p>", unsafe_allow_html=True)
     p11 = st.radio("", lista_opcoes, index=2, key="rad_p11", label_visibility="collapsed")
 
     # --- PERGUNTA 12 ---
-    txt_p12 = "Pergunta 12: Recebo feedbacks construtivos sobre meu trabalho."
+    txt_p12 = "12: Recebo feedbacks construtivos sobre meu trabalho."
     st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p12.upper()}</p>", unsafe_allow_html=True)
     p12 = st.radio("", lista_opcoes, index=2, key="rad_p12", label_visibility="collapsed")
 
     # --- PERGUNTA 13 ---
-    txt_p13 = "Pergunta 13: Meu gestor está disponível quando preciso de apoio."
+    txt_p13 = "13: Meu gestor está disponível quando preciso de apoio."
     st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p13.upper()}</p>", unsafe_allow_html=True)
     p13 = st.radio("", lista_opcoes, index=2, key="rad_p13", label_visibility="collapsed")
 
     # --- PERGUNTA 14 ---
-    txt_p14 = "Pergunta 14: As decisões da liderança são comunicadas de forma transparente."
+    txt_p14 = "14: As decisões da liderança são comunicadas de forma transparente."
     st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p14.upper()}</p>", unsafe_allow_html=True)
     p14 = st.radio("", lista_opcoes, index=2, key="rad_p14", label_visibility="collapsed")
 
     # --- PERGUNTA 15 ---
-    txt_p15 = "Pergunta 15: Sinto-me tratado(a) de forma justa pela liderança."
+    txt_p15 = "15: Sinto-me tratado(a) de forma justa pela liderança."
     st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p15.upper()}</p>", unsafe_allow_html=True)
     p15 = st.radio("", lista_opcoes, index=2, key="rad_p15", label_visibility="collapsed")
 
@@ -179,7 +179,7 @@ else:
     st.header(titulo_grupo4.upper())
 
     # --- PERGUNTA 16 ---
-    txt_p16 = "Pergunta 16: A falta de clareza ou falhas de comunicação já me causaram estresse no trabalho."
+    txt_p16 = "16: A falta de clareza ou falhas de comunicação já me causaram estresse no trabalho."
     st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p16.upper()}</p>", unsafe_allow_html=True)
     p16 = st.radio("", lista_opcoes, index=2, key="rad_p16", label_visibility="collapsed")
 
@@ -188,12 +188,12 @@ else:
     st.markdown(nota_criterio)
 
     # --- PERGUNTA 17 ---
-    txt_p17 = "Pergunta 17: O relacionamento com a liderança impacta meu bem-estar emocional."
+    txt_p17 = "17: O relacionamento com a liderança impacta meu bem-estar emocional."
     st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p17.upper()}</p>", unsafe_allow_html=True)
     p17 = st.radio("", lista_opcoes, index=2, key="rad_p17", label_visibility="collapsed")
 
     # --- PERGUNTA 18 ---
-    txt_p18 = "Pergunta 18: Já me senti sobrecarregado(a) devido à má comunicação ou orientação."
+    txt_p18 = "18: Já me senti sobrecarregado(a) devido à má comunicação ou orientação."
     st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p18.upper()}</p>", unsafe_allow_html=True)
     p18 = st.radio("", lista_opcoes, index=2, key="rad_p18", label_visibility="collapsed")
 
@@ -204,12 +204,12 @@ else:
     st.header(titulo_grupo5.upper())
 
     # --- PERGUNTA 19 ---
-    txt_p19 = "Pergunta Aberta 19: O que poderia melhorar a clareza de funções no seu trabalho?"
+    txt_p19 = "19: O que poderia melhorar a clareza de funções no seu trabalho?"
     st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p19.upper()}</p>", unsafe_allow_html=True)
     p19 = st.text_area("", key="txt_p19", label_visibility="collapsed")
 
     # --- PERGUNTA 20 ---
-    txt_p20 = "Pergunta Aberta 20: O que poderia melhorar a comunicação ou o relacionamento com a liderança?"
+    txt_p20 = "20: O que poderia melhorar a comunicação ou o relacionamento com a liderança?"
     st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p20.upper()}</p>", unsafe_allow_html=True)
     p20 = st.text_area("", key="txt_p20", label_visibility="collapsed")
 
