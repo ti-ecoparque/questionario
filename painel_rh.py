@@ -164,7 +164,7 @@ else:
         if len(df) == 0:
             st.warning(f"Nenhum dado encontrado para o filtro selecionado.")
         else:
-            # --- FUNÇÃO ATUALIZADA COM GRÁFICO % + MÉDIA DA PERGUNTA ---
+            # --- FUNÇÃO ATUALIZADA COM GRÁFICO % + MÉDIA + PORCENTAGEM DA PERGUNTA ---
             def plotar_pergunta_completa(titulo_pergunta, nome_coluna):
                 st.markdown(f"##### {titulo_pergunta.upper()}")
                 if nome_coluna in df.columns:
@@ -184,17 +184,21 @@ else:
                     st.bar_chart(df_grafico["Porcentagem (%)"])
                     
                     # CÁLCULO DA MÉDIA DA PERGUNTA INDIVIDUAL
-                    media_individual = df[nome_coluna].mean()
+                    media_individual = df[nome_coluna].mean() if total_rep > 0 else 0
+                    
+                    # NOVA LINHA: CÁLCULO DA PORCENTAGEM DA PERGUNTA
+                    porc_individual = (media_individual / 5.0) * 100
                     
                     texto_resumo = " | ".join([f"Opção {i}: {contagem[i]} vts ({lista_porcentagens[i-1]:.1f}%)" for i in range(1, 6)])
                     st.caption(texto_resumo)
-                    # Exibe a nota média da pergunta destacada em verde claro
-                    st.success(f"🎯 **Média desta pergunta: {media_individual:.2f} de 5.00**")
+                    
+                    # AJUSTE NA EXIBIÇÃO: Agora mostra a nota e a porcentagem correspondente (Ex: 55.0%)
+                    st.success(f"🎯 **Média desta pergunta: {media_individual:.2f} de 5.00 ({porc_individual:.1f}%)**")
                     st.markdown("<br>", unsafe_allow_html=True)
                 else:
                     st.error(f"Coluna {nome_coluna} não localizada.")
-            #
-                        # Mapeamento dos blocos de colunas para cálculo das médias de grupo
+            
+            # Mapeamento dos blocos de colunas para cálculo das médias de grupo
             cols_clareza = ["p01_clareza", "p02_clareza", "p03_clareza", "p04_clareza", "p05_clareza"]
             cols_comunicacao = ["p06_comunicacao", "p07_comunicacao", "p08_comunicacao", "p09_comunicacao", "p10_comunicacao"]
             cols_lideranca = ["p11_lideranca", "p12_lideranca", "p13_lideranca", "p14_lideranca", "p15_lideranca"]
