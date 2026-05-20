@@ -78,8 +78,6 @@ if not st.session_state.logado:
 # --- TELA DO QUESTIONÁRIO (SÓ APARECE APÓS LOGIN CORRETO) ---
 else:
     st.success("""
-            Identificação validada com sucesso! 
-               
             Como parte das ações de prevenção e promoção da saúde e segurança no trabalho, informamos que estamos realizando uma avaliação de riscos psicossociais, conforme diretrizes da NR-1 (Gerenciamento de Riscos Ocupacionais).
 
             Para isso, disponibilizamos este questionário que tem como objetivo entender melhor aspectos do nosso ambiente de trabalho que podem impactar o bem-estar e a saúde mental de todos.
