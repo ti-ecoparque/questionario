@@ -7,7 +7,7 @@ SUPABASE_URL = st.secrets["SUPABASE_URL"]
 SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-st.title("📋 Questionário Interno de RH")
+st.title("📋 Questionario Avaliação Riscos Psicossociais")
 
 # Controle de estado de login no Streamlit
 if "logado" not in st.session_state:
@@ -77,7 +77,24 @@ if not st.session_state.logado:
 
 # --- TELA DO QUESTIONÁRIO (SÓ APARECE APÓS LOGIN CORRETO) ---
 else:
-    st.success("Identificação validada com sucesso! Suas respostas serão salvas de forma 100% anônima por unidade.")
+    st.success("""
+            Identificação validada com sucesso! 
+               
+            Como parte das ações de prevenção e promoção da saúde e segurança no trabalho, informamos que estamos realizando uma avaliação de riscos psicossociais, conforme diretrizes da NR-1 (Gerenciamento de Riscos Ocupacionais).
+
+            Para isso, disponibilizamos este questionário que tem como objetivo entender melhor aspectos do nosso ambiente de trabalho que podem impactar o bem-estar e a saúde mental de todos.
+
+            📋 **Sobre o questionário:**
+            - O preenchimento é rápido e simples
+            - As respostas são confidenciais
+            - Não há identificação individual dos participantes
+            - Os dados serão utilizados apenas para melhorias internas
+
+            🎯 **Sua contribuição é essencial para:**
+            - Identificar oportunidades de melhoria no ambiente de trabalho
+            - Prevenir situações de estresse e sobrecarga
+            - Promover um ambiente mais saudável e equilibrado
+            """)
     
     # 1. TÍTULO EM CAIXA ALTA (Usando o .upper())
     titulo_grupo1 = "🔍 1. Clareza de Funções e Responsabilidades"
