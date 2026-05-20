@@ -71,8 +71,8 @@ if not st.session_state.logado:
                     st.session_state.logado = True
                     st.session_state.cpf_usuario = cpf
                     st.session_state.cnpj_usuario = user.get("cnpj", None)
+                    st.session_state.setor_usuario = user.get("setor", None)
                     st.rerun()
-
 
 
 # --- TELA DO QUESTIONÁRIO (SÓ APARECE APÓS LOGIN CORRETO) ---
@@ -234,6 +234,7 @@ else:
             # 1. Monta o dicionário contendo as respostas e vinculando APENAS o CNPJ (Preserva o anonimato do CPF)
             dados_para_salvar = {
                 "cnpj": st.session_state.cnpj_usuario,
+                "setor": st.session_state.setor_usuario,
                 "p01_clareza": OPCOES_LIKERT[p01],
                 "p02_clareza": OPCOES_LIKERT[p02],
                 "p03_clareza": OPCOES_LIKERT[p03],

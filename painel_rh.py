@@ -132,29 +132,45 @@ else:
 
         st.markdown("### 🏢 Filtrar Resultados")
         
+        # 1. FILTRO DE CNPJ (Existente)
         lista_cnpjs = ["Todos os CNPJs"]
         if "cnpj" in df_total.columns:
             lista_cnpjs += list(df_total["cnpj"].dropna().unique())
-            
         cnpj_selecionado = st.selectbox("Selecione a unidade / CNPJ para análise:", lista_cnpjs)
 
-        if cnpj_selecionado == "Todos os CNPJs" or "cnpj" not in df_total.columns:
-            df = df_total
-        else:
-            df = df_total[df_total["cnpj"] == cnpj_selecionado]
+        # 2. NOVO FILTRO DE SETOR
+        opcoes_setor = {
+            "Todos os Setores": None,
+            "1 - Administrativo": 1,
+            "2 - Operacional": 2
+        }
+        setor_selecionado = st.selectbox("Selecione o Setor:", list(opcoes_setor.keys()))
+        setor_id = opcoes_setor[setor_selecionado]
 
-        # --- NOVO BOTÃO DE EXPORTAR PDF ---
+        # --- APLICAÇÃO DOS FILTROS COMBINADOS NO DATAFRAME ---
+        df = df_total.copy()
+        
+        # Filtra por CNPJ se não for "Todos"
+        if cnpj_selecionado != "Todos os CNPJs" and "cnpj" in df.columns:
+            df = df[df["cnpj"] == cnpj_selecionado]
+            
+        # Filtra por Setor se não for "Todos"
+        if setor_id is not None and "setor" in df.columns:
+            df = df[df["setor"] == setor_id]
+        # ----------------------------------------------------
+
+        # Botão de exportar PDF atualizado para usar o 'df' com os dois filtros aplicados
         if len(df) > 0:
-            pdf_bytes = gerar_pdf(df, cnpj_selecionado)
+            pdf_bytes = gerar_pdf(df, f"{cnpj_selecionado} - {setor_selecionado}")
             st.download_button(
                 label="📥 Baixar Relatório em PDF",
                 data=bytes(pdf_bytes),
-                file_name=f"Relatorio_RH_{cnpj_selecionado.replace(' ', '_')}.pdf",
+                file_name=f"Relatorio_RH_{cnpj_selecionado}_{setor_selecionado}.pdf",
                 mime="application/pdf"
             )
-        # ----------------------------------
 
-        st.metric(f"Total de Respondentes ({cnpj_selecionado})", len(df))
+        # Exibe a métrica total atualizada com os dois filtros
+        st.metric(f"Respondentes ({cnpj_selecionado} / {setor_selecionado})", len(df))
         st.markdown("---")
 
         if len(df) == 0:
@@ -188,7 +204,7 @@ else:
             st.markdown("---")
 
             st.subheader("✍️ 5. Respostas das Perguntas Abertas")
-            tab1, tab2 = st.tabs(["Pontos Positivos (Pergunta A)", "Melhorias no Setor (Pergunta B)"])
+            tab1, tab2 = st.tabs(["Pergunta 19 Aberta", "Pergunta 20 Aberta "])
             
             with tab1:
                 if 'p19_aberta_texto' in df.columns:
