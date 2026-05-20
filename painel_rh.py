@@ -202,7 +202,9 @@ else:
 
             # --- GRUPO 1: CLAREZA ---
             st.subheader("🔍 1. CLAREZA DE FUNÇÕES E RESPONSABILIDADES")
-            st.info(f"📊 **MÉDIA GERAL DO GRUPO (CLAREZA): {df[cols_clareza].mean().mean():.2f} de 5.00**")
+            media_g1 = df[cols_clareza].mean().mean()
+            porc_g1 = (media_g1 / 5.0) * 100
+            st.info(f"📊 **MÉDIA GERAL DO GRUPO (CLAREZA): {media_g1:.2f} de 5.00 ({porc_g1:.1f}%)**")
             st.markdown("<br>", unsafe_allow_html=True)
             plotar_pergunta_completa("Pergunta 1: Sei exatamente quais são minhas responsabilidades no trabalho.", "p01_clareza")
             plotar_pergunta_completa("Pergunta 2: As expectativas sobre meu desempenho são claras.", "p02_clareza")
@@ -212,7 +214,9 @@ else:
 
             # --- GRUPO 2: COMUNICAÇÃO ---
             st.subheader("🗣️ 2. COMUNICAÇÃO NO AMBIENTE DE TRABALHO")
-            st.info(f"📊 **MÉDIA GERAL DO GRUPO (COMUNICAÇÃO): {df[cols_comunicacao].mean().mean():.2f} de 5.00**")
+            media_g2 = df[cols_comunicacao].mean().mean()
+            porc_g2 = (media_g2 / 5.0) * 100
+            st.info(f"📊 **MÉDIA GERAL DO GRUPO (COMUNICAÇÃO): {media_g2:.2f} de 5.00 ({porc_g2:.1f}%)**")
             st.markdown("<br>", unsafe_allow_html=True)
             plotar_pergunta_completa("Pergunta 6: A comunicação interna é clara e objetiva.", "p06_comunicacao")
             plotar_pergunta_completa("Pergunta 7: Recebo as informações necessárias para realizar meu trabalho adequadamente.", "p07_comunicacao")
@@ -222,7 +226,9 @@ else:
 
             # --- GRUPO 3: LIDERANÇA ---
             st.subheader("👔 3. RELACIONAMENTO COM A LIDERANÇA")
-            st.info(f"📊 **MÉDIA GERAL DO GRUPO (LIDERANÇA): {df[cols_lideranca].mean().mean():.2f} de 5.00**")
+            media_g3 = df[cols_lideranca].mean().mean()
+            porc_g3 = (media_g3 / 5.0) * 100
+            st.info(f"📊 **MÉDIA GERAL DO GRUPO (LIDERANÇA): {media_g3:.2f} de 5.00 ({porc_g3:.1f}%)**")
             st.markdown("<br>", unsafe_allow_html=True)
             plotar_pergunta_completa("Pergunta 11: Meu gestor demonstra respeito no relacionamento com a equipe.", "p11_lideranca")
             plotar_pergunta_completa("Pergunta 12: Recebo feedbacks construtivos sobre meu trabalho.", "p12_lideranca")
@@ -232,7 +238,9 @@ else:
 
             # --- GRUPO 4: PSICOSSOCIAL ---
             st.subheader("🧠 4. IMPACTO PSICOSSOCIAL")
-            st.info(f"📊 **MÉDIA GERAL DO GRUPO (PSICOSSOCIAL): {df[cols_psico].mean().mean():.2f} de 5.00**")
+            media_g4 = df[cols_psico].mean().mean()
+            porc_g4 = (media_g4 / 5.0) * 100
+            st.info(f"📊 **MÉDIA GERAL DO GRUPO (PSICOSSOCIAL): {media_g4:.2f} de 5.00 ({porc_g4:.1f}%)**")
             st.markdown("<br>", unsafe_allow_html=True)
             plotar_pergunta_completa("Pergunta 16: A falta de clareza ou falhas de comunicação já me causaram estresse no trabalho.", "p16_psico")
             plotar_pergunta_completa("Pergunta 17: O relacionamento com a liderança impacta meu bem-estar emocional.", "p17_psico")
