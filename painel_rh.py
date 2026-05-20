@@ -10,7 +10,7 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 SENHA_CORRETA_RH = st.secrets["SENHA_PAINEL_RH"]
 
-# --- FUNÇÃO PARA GERAR O PDF EM MEMÓRIA (NATIVA, COMPATÍVEL COM NUVEM E COM PORCENTAGEM) ---
+# --- FUNÇÃO PARA GERAR O PDF EM MEMÓRIA ---
 def gerar_pdf(df_filtrado, filtro_nome):
     pdf = FPDF()
     pdf.add_page()
@@ -51,7 +51,7 @@ def gerar_pdf(df_filtrado, filtro_nome):
             pdf.cell(0, 6, tratar_texto(f"Indicador: {col.upper()}"), ln=True)
             pdf.set_font("Helvetica", "", 10)
             
-            # Executa a contagem e garante o intervalo de 1 a 5 fixo
+            # CORREÇÃO AQUI: Garante o fechamento correto do reindex com fillvalue=0
             contagem = df_filtrado[col].value_counts().reindex([1, 2, 3, 4, 5], fillvalue=0)
             
             detalhe_linha = "   "
@@ -99,8 +99,8 @@ def gerar_pdf(df_filtrado, filtro_nome):
         else:
             pdf.cell(0, 6, tratar_texto("Nenhuma resposta registrada."), ln=True)
 
+    # Retorna explicitamente em formato de string de bytes para o Streamlit
     return pdf.output()
-
 
 
 # --- CODIGOS DA INTERFACE ---
