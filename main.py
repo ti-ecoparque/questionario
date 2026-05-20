@@ -84,7 +84,6 @@ else:
     st.header(titulo_grupo1.upper())
 
     # --- PERGUNTA 1 ---
-    # Texto em caixa alta
     txt_p01 = "Pergunta 1: Sei exatamente quais são minhas responsabilidades no trabalho."
     # Markdown com HTML (Aumenta o tamanho usando font-size)
     st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p01.upper()}</p>", unsafe_allow_html=True)
@@ -114,38 +113,105 @@ else:
     st.markdown("---")
 
     # --- GRUPO 2: COMUNICAÇÃO NO AMBIENTE DE TRABALHO ---
-    st.header("🗣️ 2. Comunicação no Ambiente de Trabalho")
-    p06 = st.radio("Pergunta 6: As informações importantes sobre a empresa são compartilhadas de forma transparente.", lista_opcoes, index=2)
-    p07 = st.radio("Pergunta 7: Sinto que tenho liberdade para expor minhas opiniões e novas ideias.", lista_opcoes, index=2)
-    p08 = st.radio("Pergunta 8: A comunicação entre os diferentes setores da empresa flui sem problemas.", lista_opcoes, index=2)
-    p09 = st.radio("Pergunta 9: Recebo feedbacks construtivos com frequência sobre o meu trabalho.", lista_opcoes, index=2)
-    p10 = st.radio("Pergunta 10: Os canais oficiais de comunicação da empresa funcionam de forma eficiente.", lista_opcoes, index=2)
+    titulo_grupo2 = "🗣️ 2. Comunicação no Ambiente de Trabalho"
+    st.header(titulo_grupo2.upper())
+
+    # --- PERGUNTA 6 ---
+    txt_p06 = "Pergunta 6: A comunicação interna é clara e objetiva."
+    st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p06.upper()}</p>", unsafe_allow_html=True)
+    p06 = st.radio("", lista_opcoes, index=2, key="rad_p06", label_visibility="collapsed")
+
+    # --- PERGUNTA 7 ---
+    txt_p07 = "Pergunta 7: Recebo as informações necessárias para realizar meu trabalho adequadamente."
+    st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p07.upper()}</p>", unsafe_allow_html=True)
+    p07 = st.radio("", lista_opcoes, index=2, key="rad_p07", label_visibility="collapsed")
+
+    # --- PERGUNTA 8 ---
+    txt_p08 = "Pergunta 8: As informações importantes chegam em tempo hábil."
+    st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p08.upper()}</p>", unsafe_allow_html=True)
+    p08 = st.radio("", lista_opcoes, index=2, key="rad_p08", label_visibility="collapsed")
+
+    # --- PERGUNTA 9 ---
+    txt_p09 = "Pergunta 9: Sinto-me à vontade para expressar opiniões ou dificuldades"
+    st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p09.upper()}</p>", unsafe_allow_html=True)
+    p09 = st.radio("", lista_opcoes, index=2, key="rad_p09", label_visibility="collapsed")
+
+    # --- PERGUNTA 10 ---
+    txt_p10 = "Pergunta 10: Há abertura para diálogo no ambiente de trabalho."
+    st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p10.upper()}</p>", unsafe_allow_html=True)
+    p10 = st.radio("", lista_opcoes, index=2, key="rad_p10", label_visibility="collapsed")
 
     st.markdown("---")
 
     # --- GRUPO 3: RELACIONAMENTO COM A LIDERANÇA ---
-    st.header("👔 3. Relacionamento com a Liderança")
-    p11 = st.radio("Pergunta 11: Minha liderança direta me trata com respeito profissional e consideração.", lista_opcoes, index=2)
-    p12 = st.radio("Pergunta 12: Sinto que posso confiar nas decisões tomadas pela minha liderança.", lista_opcoes, index=2)
-    p13 = st.radio("Pergunta 13: O gestor está disponível para me apoiar quando enfrento dificuldades no trabalho.", lista_opcoes, index=2)
-    p14 = st.radio("Pergunta 14: Minha liderança reconhece e valoriza os meus esforços e bons resultados.", lista_opcoes, index=2)
-    p15 = st.radio("Pergunta 15: As decisões da gestão são explicadas de forma clara para a equipe.", lista_opcoes, index=2)
+    titulo_grupo3 = "👔 3. Relacionamento com a Liderança"
+    st.header(titulo_grupo3.upper())
+
+    # --- PERGUNTA 11 ---
+    txt_p11 = "Pergunta 11: Meu gestor demonstra respeito no relacionamento com a equipe"
+    st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p11.upper()}</p>", unsafe_allow_html=True)
+    p11 = st.radio("", lista_opcoes, index=2, key="rad_p11", label_visibility="collapsed")
+
+    # --- PERGUNTA 12 ---
+    txt_p12 = "Pergunta 12: Recebo feedbacks construtivos sobre meu trabalho."
+    st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p12.upper()}</p>", unsafe_allow_html=True)
+    p12 = st.radio("", lista_opcoes, index=2, key="rad_p12", label_visibility="collapsed")
+
+    # --- PERGUNTA 13 ---
+    txt_p13 = "Pergunta 13: Meu gestor está disponível quando preciso de apoio."
+    st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p13.upper()}</p>", unsafe_allow_html=True)
+    p13 = st.radio("", lista_opcoes, index=2, key="rad_p13", label_visibility="collapsed")
+
+    # --- PERGUNTA 14 ---
+    txt_p14 = "Pergunta 14: As decisões da liderança são comunicadas de forma transparente."
+    st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p14.upper()}</p>", unsafe_allow_html=True)
+    p14 = st.radio("", lista_opcoes, index=2, key="rad_p14", label_visibility="collapsed")
+
+    # --- PERGUNTA 15 ---
+    txt_p15 = "Pergunta 15: Sinto-me tratado(a) de forma justa pela liderança."
+    st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p15.upper()}</p>", unsafe_allow_html=True)
+    p15 = st.radio("", lista_opcoes, index=2, key="rad_p15", label_visibility="collapsed")
 
     st.markdown("---")
 
     # --- GRUPO 4: IMPACTO PSICOSSOCIAL ---
-    st.header("🧠 4. Impacto Psicossocial")
-    p16 = st.radio("Pergunta 16: Consigo equilibrar de forma saudável as demandas do trabalho com minha vida pessoal.", lista_opcoes, index=2)
-    st.markdown("*(Nota: o critério de avaliação da pergunta 17 e 18 segue o mesmo padrão)*")
-    p17 = st.radio("Pergunta 17: O ambiente de trabalho é psicologicamente seguro e livre de pressões desproporcionais.", lista_opcoes, index=2)
-    p18 = st.radio("Pergunta 18: Sinto motivação e energia ao iniciar a minha jornada de trabalho nesta empresa.", lista_opcoes, index=2)
+    titulo_grupo4 = "🧠 4. Impacto Psicossocial"
+    st.header(titulo_grupo4.upper())
+
+    # --- PERGUNTA 16 ---
+    txt_p16 = "Pergunta 16: A falta de clareza ou falhas de comunicação já me causaram estresse no trabalho."
+    st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p16.upper()}</p>", unsafe_allow_html=True)
+    p16 = st.radio("", lista_opcoes, index=2, key="rad_p16", label_visibility="collapsed")
+
+    # Nota de critério formatada em itálico e caixa alta discreta
+    nota_criterio = "*(NOTA: O CRITÉRIO DE AVALIAÇÃO DA PERGUNTA 17 E 18 SEGUE O MESMO PADRÃO)*"
+    st.markdown(nota_criterio)
+
+    # --- PERGUNTA 17 ---
+    txt_p17 = "Pergunta 17: O relacionamento com a liderança impacta meu bem-estar emocional."
+    st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p17.upper()}</p>", unsafe_allow_html=True)
+    p17 = st.radio("", lista_opcoes, index=2, key="rad_p17", label_visibility="collapsed")
+
+    # --- PERGUNTA 18 ---
+    txt_p18 = "Pergunta 18: Já me senti sobrecarregado(a) devido à má comunicação ou orientação."
+    st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p18.upper()}</p>", unsafe_allow_html=True)
+    p18 = st.radio("", lista_opcoes, index=2, key="rad_p18", label_visibility="collapsed")
 
     st.markdown("---")
 
     # --- GRUPO 5: PERGUNTAS ABERTAS ---
-    st.header("✍️ 5. Perguntas Abertas (Opcionais)")
-    p19 = st.text_area("Pergunta Aberta A: Quais são os principais pontos positivos do ambiente de trabalho atual?")
-    p20 = st.text_area("Pergunta Aberta B: O que você sugeriria para melhorar a rotina ou o clima no seu setor?")
+    titulo_grupo5 = "✍️ 5. Perguntas Abertas (Opcionais)"
+    st.header(titulo_grupo5.upper())
+
+    # --- PERGUNTA 19 ---
+    txt_p19 = "Pergunta Aberta 19: O que poderia melhorar a clareza de funções no seu trabalho?"
+    st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p19.upper()}</p>", unsafe_allow_html=True)
+    p19 = st.text_area("", key="txt_p19", label_visibility="collapsed")
+
+    # --- PERGUNTA 20 ---
+    txt_p20 = "Pergunta Aberta 20: O que poderia melhorar a comunicação ou o relacionamento com a liderança?"
+    st.markdown(f"<p style='font-size:18px; font-weight:bold;'>{txt_p20.upper()}</p>", unsafe_allow_html=True)
+    p20 = st.text_area("", key="txt_p20", label_visibility="collapsed")
 
     # --- BOTÃO DE ENVIO REAL ---
     if st.button("Finalizar e Enviar Questionário"):
