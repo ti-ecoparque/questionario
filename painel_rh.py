@@ -10,64 +10,68 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 SENHA_CORRETA_RH = st.secrets["SENHA_PAINEL_RH"]
 
-# --- FUNÇÃO PARA GERAR O PDF EM MEMÓRIA (NATIVA E COMPATÍVEL COM NUVEM) ---
-def gerar_pdf(df_filtrado, cnpj_nome):
+# --- FUNÇÃO PARA GERAR O PDF EM MEMÓRIA (NATIVA, COMPATÍVEL COM NUVEM E COM PORCENTAGEM) ---
+def gerar_pdf(df_filtrado, filtro_nome):
     pdf = FPDF()
     pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
     
     # Função interna para limpar o texto e garantir compatibilidade com latin-1
     def tratar_texto(texto):
-        if not texto:
+        if not texto: 
             return ""
-        # Remove caracteres que quebram o PDF padrão, mantendo acentuação básica PT-BR
         return str(texto).encode('latin-1', 'replace').decode('latin-1')
 
-    # Título Principal (Usando a fonte core 'Helvetica' nativa do PDF)
+    # Cabeçalho do Documento
     pdf.set_font("Helvetica", "B", 16)
-    pdf.cell(0, 10, tratar_texto("Relatório de Clima Organizacional - RH"), ln=True, align="C")
+    pdf.cell(0, 10, tratar_texto("Relatório Estatístico de Clima Organizacional - RH"), ln=True, align="C")
     pdf.set_font("Helvetica", "", 12)
-    pdf.cell(0, 10, tratar_texto(f"Unidade / CNPJ: {cnpj_nome}"), ln=True, align="C")
-    pdf.cell(0, 5, tratar_texto(f"Total de Respondentes: {len(df_filtrado)}"), ln=True, align="C")
+    pdf.cell(0, 8, tratar_texto(f"Filtro Aplicado: {filtro_nome}"), ln=True, align="C")
+    pdf.cell(0, 8, tratar_texto(f"Volume de Amostragem: {len(df_filtrado)} respondentes"), ln=True, align="C")
     pdf.ln(10)
     
-    # Definição dos grupos de perguntas para iterar
-    grupos = {
-        "1. Clareza de Funções e Responsabilidades": ["p01_clareza", "p02_clareza", "p03_clareza", "p04_clareza", "p05_clareza"],
-        "2. Comunicação no Ambiente de Trabalho": ["p06_comunicacao", "p07_comunicacao", "p08_comunicacao", "p09_comunicacao", "p10_comunicacao"],
-        "3. Relacionamento com a Liderança": ["p11_lideranca", "p12_lideranca", "p13_lideranca", "p14_lideranca", "p15_lideranca"],
-        "4. Impacto Psicossocial": ["p16_psico", "p17_psico", "p18_psico"]
-    }
-    
-    # 1. Escreve as Médias das Perguntas Objetivas
+    # 1. DISTRIBUIÇÃO PERCENTUAL DAS PERGUNTAS OBJETIVAS
     pdf.set_font("Helvetica", "B", 14)
-    pdf.cell(0, 10, tratar_texto("MÉDIAS DAS RESPOSTAS OBJETIVAS (Escala de 1 a 5)"), ln=True)
+    pdf.cell(0, 10, tratar_texto("DISTRIBUIÇÃO PERCENTUAL POR PERGUNTA (1 a 5)"), ln=True)
     pdf.line(10, pdf.get_y(), 200, pdf.get_y())
     pdf.ln(5)
     
-    for grupo_nome, colunas in grupos.items():
-        pdf.set_font("Helvetica", "B", 11)
-        pdf.cell(0, 7, tratar_texto(grupo_nome), ln=True)
-        pdf.set_font("Helvetica", "", 10)
-        
-        # Calcula médias do bloco
-        medias = df_filtrado[colunas].mean()
-        for col in colunas:
-            nota = medias.get(col, 0)
-            pdf.cell(0, 6, tratar_texto(f"   - {col.upper()}: {nota:.2f} de 5.00"), ln=True)
-        
-        pdf.cell(0, 6, tratar_texto(f"   -> Média Geral do Bloco: {medias.mean():.2f}"), ln=True)
-        pdf.ln(4)
-        
+    # Lista com mapeamento técnico exato das 18 colunas do seu banco
+    todas_colunas = [
+        f"p{str(i).zfill(2)}" + ("_clareza" if i<=5 else "_comunicacao" if i<=10 else "_lideranca" if i<=15 else "_psico")
+        for i in range(1, 19)
+    ]
+    
+    total_respostas = len(df_filtrado)
+    
+    # Varre cada uma das 18 colunas numéricas calculando a porcentagem
+    for col in todas_colunas:
+        if col in df_filtrado.columns:
+            pdf.set_font("Helvetica", "B", 11)
+            pdf.cell(0, 6, tratar_texto(f"Indicador: {col.upper()}"), ln=True)
+            pdf.set_font("Helvetica", "", 10)
+            
+            # Executa a contagem e garante o intervalo de 1 a 5 fixo
+            contagem = df_filtrado[col].value_counts().reindex([1, 2, 3, 4, 5], fillvalue=0)
+            
+            detalhe_linha = "   "
+            for opcao in range(1, 6):
+                qtd_votos = contagem[opcao]
+                perc_votos = (qtd_votos / total_respostas) * 100 if total_respostas > 0 else 0
+                detalhe_linha += f"Opção {opcao}: {qtd_votos} vts ({perc_votos:.1f}%)   |   "
+            
+            pdf.multi_cell(0, 6, tratar_texto(detalhe_linha))
+            pdf.ln(3)
+            
     pdf.ln(5)
     
-    # 2. Escreve as Perguntas Abertas
+    # 2. RESPOSTAS DAS PERGUNTAS ABERTAS
     pdf.set_font("Helvetica", "B", 14)
     pdf.cell(0, 10, tratar_texto("RESPOSTAS DAS PERGUNTAS ABERTAS"), ln=True)
     pdf.line(10, pdf.get_y(), 200, pdf.get_y())
     pdf.ln(5)
     
-    # Pergunta A
+    # Pergunta 19 Aberta
     pdf.set_font("Helvetica", "B", 11)
     pdf.cell(0, 7, tratar_texto("Pergunta 19 Aberta:"), ln=True)
     pdf.set_font("Helvetica", "", 10)
@@ -82,9 +86,9 @@ def gerar_pdf(df_filtrado, cnpj_nome):
             
     pdf.ln(5)
     
-    # Pergunta B
+    # Pergunta 20 Aberta
     pdf.set_font("Helvetica", "B", 11)
-    pdf.cell(0, 7, tratar_texto("Pergunta 20 Aberta"), ln=True)
+    pdf.cell(0, 7, tratar_texto("Pergunta 20 Aberta:"), ln=True)
     pdf.set_font("Helvetica", "", 10)
     if 'p20_aberta_texto' in df_filtrado.columns:
         respostas_p20 = df_filtrado['p20_aberta_texto'].dropna()
@@ -132,13 +136,13 @@ else:
 
         st.markdown("### 🏢 Filtrar Resultados")
         
-        # 1. FILTRO DE CNPJ (Existente)
+        # 1. FILTRO DE CNPJ
         lista_cnpjs = ["Todos os CNPJs"]
         if "cnpj" in df_total.columns:
             lista_cnpjs += list(df_total["cnpj"].dropna().unique())
         cnpj_selecionado = st.selectbox("Selecione a unidade / CNPJ para análise:", lista_cnpjs)
 
-        # 2. NOVO FILTRO DE SETOR
+        # 2. FILTRO DE SETOR
         opcoes_setor = {
             "Todos os Setores": None,
             "1 - Administrativo": 1,
@@ -150,11 +154,9 @@ else:
         # --- APLICAÇÃO DOS FILTROS COMBINADOS NO DATAFRAME ---
         df = df_total.copy()
         
-        # Filtra por CNPJ se não for "Todos"
         if cnpj_selecionado != "Todos os CNPJs" and "cnpj" in df.columns:
             df = df[df["cnpj"] == cnpj_selecionado]
             
-        # Filtra por Setor se não for "Todos"
         if setor_id is not None and "setor" in df.columns:
             df = df[df["setor"] == setor_id]
         # ----------------------------------------------------
@@ -174,35 +176,66 @@ else:
         st.markdown("---")
 
         if len(df) == 0:
-            st.warning(f"Nenhum dado encontrado para o filtro: {cnpj_selecionado}")
+            st.warning(f"Nenhum dado encontrado para o filtro selecionado.")
         else:
-            cols_clareza = ["p01_clareza", "p02_clareza", "p03_clareza", "p04_clareza", "p05_clareza"]
-            cols_comunicacao = ["p06_comunicacao", "p07_comunicacao", "p08_comunicacao", "p09_comunicacao", "p10_comunicacao"]
-            cols_lideranca = ["p11_lideranca", "p12_lideranca", "p13_lideranca", "p14_lideranca", "p15_lideranca"]
-            cols_psico = ["p16_psico", "p17_psico", "p18_psico"]
+            # --- FUNÇÃO INTERNA PARA GERAR OS GRÁFICOS DE PORCENTAGEM (0-100%) ---
+            def plotar_pergunta_porcentagem(titulo_pergunta, nome_coluna):
+                st.markdown(f"##### {titulo_pergunta.upper()}")
+                if nome_coluna in df.columns:
+                    # Conta os votos e garante que apareçam as opções de 1 a 5 (mesmo se tiverem 0 votos)
+                    contagem = df[nome_coluna].value_counts().reindex([1, 2, 3, 4, 5], fillvalue=0)
+                    
+                    # Transforma em porcentagem com base no total de respondentes filtrados
+                    porcentagem = (contagem / len(df)) * 100
+                    
+                    # Monta o DataFrame estruturado para o gráfico
+                    df_grafico = pd.DataFrame({
+                        "Porcentagem (%)": porcentagem.values
+                    }, index=["Discordo totalmente (1)", "Discordo parcialmente (2)", "Nem concordo/discordo (3)", "Concordo parcialmente (4)", "Concordo totalmente (5)"])
+                    
+                    # Renderiza o gráfico de barras vertical (0 a 100%)
+                    st.bar_chart(df_grafico["Porcentagem (%)"])
+                    
+                    # Exibe a legenda textual com a quantidade exata de votos e a respectiva porcentagem
+                    texto_resumo = " | ".join([f"Opção {i}: {contagem[i]} votos ({porcentagem[i]:.1f}%)" for i in range(1, 6)])
+                    st.caption(texto_resumo)
+                    st.markdown("<br>", unsafe_allow_html=True)
+                else:
+                    st.error(f"Coluna {nome_coluna} não localizada no banco de dados.")
 
+            # --- GRUPO 1: CLAREZA ---
             st.subheader("🔍 1. Clareza de Funções e Responsabilidades")
-            media_clareza = df[cols_clareza].mean()
-            st.bar_chart(media_clareza)
-            st.caption(f"Média geral do grupo: {media_clareza.mean():.2f} de 5.00")
+            plotar_pergunta_porcentagem("Pergunta 1: Eu compreendo claramente quais são as minhas responsabilidades diárias.", "p01_clareza")
+            plotar_pergunta_porcentagem("Pergunta 2: Sei exatamente o que a liderança espera do meu desempenho profissional.", "p02_clareza")
+            plotar_pergunta_porcentagem("Pergunta 3: Os objetivos e metas do meu cargo são definidos de forma clara.", "p03_clareza")
+            plotar_pergunta_porcentagem("Pergunta 4: Entendo como o meu trabalho diário contribui para o sucesso da empresa.", "p04_clareza")
+            plotar_pergunta_porcentagem("Pergunta 5: Existe uma division justa de tarefas dentro da minha equipe de trabalho.", "p05_clareza")
 
+            # --- GRUPO 2: COMUNICAÇÃO ---
             st.subheader("🗣️ 2. Comunicação no Ambiente de Trabalho")
-            media_comunicacao = df[cols_comunicacao].mean()
-            st.bar_chart(media_comunicacao)
-            st.caption(f"Média geral do grupo: {media_comunicacao.mean():.2f} de 5.00")
+            plotar_pergunta_porcentagem("Pergunta 6: As informações importantes sobre a empresa são compartilhadas de forma transparente.", "p06_comunicacao")
+            plotar_pergunta_porcentagem("Pergunta 7: Sinto que tenho liberdade para expor minhas opiniões e novas ideias.", "p07_comunicacao")
+            plotar_pergunta_porcentagem("Pergunta 8: A comunicação entre os diferentes setores da empresa flui sem problemas.", "p08_comunicacao")
+            plotar_pergunta_porcentagem("Pergunta 9: Recebo feedbacks construtivos com frequência sobre o meu trabalho.", "p09_comunicacao")
+            plotar_pergunta_porcentagem("Pergunta 10: Os canais oficiais de comunicação da empresa funcionam de forma eficiente.", "p10_comunicacao")
 
+            # --- GRUPO 3: LIDERANÇA ---
             st.subheader("👔 3. Relacionamento com a Liderança")
-            media_lideranca = df[cols_lideranca].mean()
-            st.bar_chart(media_lideranca)
-            st.caption(f"Média geral do grupo: {media_lideranca.mean():.2f} de 5.00")
+            plotar_pergunta_porcentagem("Pergunta 11: Minha liderança direta me trata com respeito profissional e consideração.", "p11_lideranca")
+            plotar_pergunta_porcentagem("Pergunta 12: Sinto que posso confiar nas decisões tomadas pela minha liderança.", "p12_lideranca")
+            plotar_pergunta_porcentagem("Pergunta 13: O gestor está disponível para me apoiar quando enfrento dificuldades no trabalho.", "p13_lideranca")
+            plotar_pergunta_porcentagem("Pergunta 14: Minha liderança reconhece e valoriza os meus esforços e bons resultados.", "p14_lideranca")
+            plotar_pergunta_porcentagem("Pergunta 15: As decisões da gestão são explicadas de forma clara para a equipe.", "p15_lideranca")
 
+            # --- GRUPO 4: PSICOSSOCIAL ---
             st.subheader("🧠 4. Impacto Psicossocial")
-            media_psico = df[cols_psico].mean()
-            st.bar_chart(media_psico)
-            st.caption(f"Média geral do grupo: {media_psico.mean():.2f} de 5.00")
+            plotar_pergunta_porcentagem("Pergunta 16: Consigo equilibrar de forma saudável as demandas do trabalho com minha vida pessoal.", "p16_psico")
+            plotar_pergunta_porcentagem("Pergunta 17: O ambiente de trabalho é psicologicamente seguro e livre de pressões desproporcionais.", "p17_psico")
+            plotar_pergunta_porcentagem("Pergunta 18: Sinto motivação e energia ao iniciar a minha jornada de trabalho nesta empresa.", "p18_psico")
 
             st.markdown("---")
 
+            # --- GRUPO 5: PERGUNTAS ABERTAS (LIMPAS SEM DATA) ---
             st.subheader("✍️ 5. Respostas das Perguntas Abertas")
             tab1, tab2 = st.tabs(["Pergunta 19 Aberta", "Pergunta 20 Aberta "])
             
