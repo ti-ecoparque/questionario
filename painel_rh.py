@@ -10,7 +10,7 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 SENHA_CORRETA_RH = st.secrets["SENHA_PAINEL_RH"]
 
-# --- FUNÇÃO PARA GERAR O PDF EM MEMÓRIA ---
+# --- FUNÇÃO PARA GERAR O PDF EM MEMÓRIA (VERSÃO COMPATÍVEL E ROBUSTA) ---
 def gerar_pdf(df_filtrado, filtro_nome):
     pdf = FPDF()
     pdf.add_page()
@@ -51,8 +51,14 @@ def gerar_pdf(df_filtrado, filtro_nome):
             pdf.cell(0, 6, tratar_texto(f"Indicador: {col.upper()}"), ln=True)
             pdf.set_font("Helvetica", "", 10)
             
-            # CORREÇÃO AQUI: Garante o fechamento correto do reindex com fillvalue=0
-            contagem = df_filtrado[col].value_counts().reindex([1, 2, 3, 4, 5], fillvalue=0)
+            # SOLUÇÃO SEM REINDEX: Cria um dicionário manual de 1 a 5 zerado
+            contagem = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
+            
+            # Preenche o dicionário com os valores reais que vieram do banco
+            votos_reais = df_filtrado[col].value_counts().to_dict()
+            for opcao_id, qtd in votos_reais.items():
+                if opcao_id in contagem:
+                    contagem[opcao_id] = qtd
             
             detalhe_linha = "   "
             for opcao in range(1, 6):
@@ -99,8 +105,9 @@ def gerar_pdf(df_filtrado, filtro_nome):
         else:
             pdf.cell(0, 6, tratar_texto("Nenhuma resposta registrada."), ln=True)
 
-    # Retorna explicitamente em formato de string de bytes para o Streamlit
-    return pdf.output()
+    # SOLUÇÃO DO TYPEERROR: Transforma o PDF em bytearray limpo na memória
+    return bytearray(pdf.output())
+
 
 
 # --- CODIGOS DA INTERFACE ---
