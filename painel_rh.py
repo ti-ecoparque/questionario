@@ -186,29 +186,45 @@ else:
             st.warning(f"Nenhum dado encontrado para o filtro selecionado.")
         else:
             # --- FUNÇÃO INTERNA PARA GERAR OS GRÁFICOS DE PORCENTAGEM (0-100%) ---
+                        # --- FUNÇÃO INTERNA PARA GERAR OS GRÁFICOS DE PORCENTAGEM (CORRIGIDA E SEM REINDEX) ---
             def plotar_pergunta_porcentagem(titulo_pergunta, nome_coluna):
                 st.markdown(f"##### {titulo_pergunta.upper()}")
                 if nome_coluna in df.columns:
-                    # Conta os votos e garante que apareçam as opções de 1 a 5 (mesmo se tiverem 0 votos)
-                    contagem = df[nome_coluna].value_counts().reindex([1, 2, 3, 4, 5], fillvalue=0)
                     
-                    # Transforma em porcentagem com base no total de respondentes filtrados
-                    porcentagem = (contagem / len(df)) * 100
+                    # Cria um dicionário manual de 1 a 5 zerado para evitar o erro do reindex
+                    contagem = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
                     
-                    # Monta o DataFrame estruturado para o gráfico
+                    # Preenche o dicionário com os valores de votos reais vindos do banco
+                    votos_reais = df[nome_coluna].value_counts().to_dict()
+                    for opcao_id, qtd in votos_reais.items():
+                        if opcao_id in contagem:
+                            contagem[opcao_id] = qtd
+                    
+                    # Converte os valores do dicionário para uma lista ordenada
+                    lista_votos = [contagem[1], contagem[2], contagem[3], contagem[4], contagem[5]]
+                    total_respondentes = len(df)
+                    
+                    # Calcula as porcentagens com base no total atual filtrado
+                    lista_porcentagens = [
+                        (votos / total_respondentes) * 100 if total_respondentes > 0 else 0
+                        for votos in lista_votos
+                    ]
+                    
+                    # Monta o DataFrame estruturado para o gráfico do Streamlit
                     df_grafico = pd.DataFrame({
-                        "Porcentagem (%)": porcentagem.values
+                        "Porcentagem (%)": lista_porcentagens
                     }, index=["Discordo totalmente (1)", "Discordo parcialmente (2)", "Nem concordo/discordo (3)", "Concordo parcialmente (4)", "Concordo totalmente (5)"])
                     
                     # Renderiza o gráfico de barras vertical (0 a 100%)
                     st.bar_chart(df_grafico["Porcentagem (%)"])
                     
                     # Exibe a legenda textual com a quantidade exata de votos e a respectiva porcentagem
-                    texto_resumo = " | ".join([f"Opção {i}: {contagem[i]} votos ({porcentagem[i]:.1f}%)" for i in range(1, 6)])
+                    texto_resumo = " | ".join([f"Opção {i}: {contagem[i]} votos ({lista_porcentagens[i-1]:.1f}%)" for i in range(1, 6)])
                     st.caption(texto_resumo)
                     st.markdown("<br>", unsafe_allow_html=True)
                 else:
                     st.error(f"Coluna {nome_coluna} não localizada no banco de dados.")
+
 
             # --- GRUPO 1: CLAREZA ---
             st.subheader("🔍 1. Clareza de Funções e Responsabilidades")
