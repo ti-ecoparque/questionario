@@ -1,6 +1,21 @@
 import streamlit as st
 from supabase import create_client, Client
 from datetime import datetime
+import pytz # Horário de Brasília na nuvem 
+
+from datetime import datetime
+import pytz
+import streamlit as st
+
+fuso_horario = pytz.timezone('America/Sao_Paulo')
+agora = datetime.now(fuso_horario)
+
+# Configurado para: 26 de Maio de 2026 às 07h30
+data_limite = fuso_horario.localize(datetime(2026, 5, 26, 9, 0, 0))
+
+if agora >= data_limite:
+    st.error("⚠️ Este questionário foi encerrado pelo RH.")
+    st.stop()
 
 # Conexão com o Supabase usando secrets
 SUPABASE_URL = st.secrets["SUPABASE_URL"]
