@@ -10,6 +10,32 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 # Puxa a senha definida nas Secrets do Streamlit Cloud
 SENHA_CORRETA_RH = st.secrets["SENHA_PAINEL_RH"]
 
+# -- Dicionario -- # 
+
+PERGUNTAS = {
+    "p01_clareza": "1: Sei exatamente quais são minhas responsabilidades no trabalho.",
+    "p02_clareza": "2: As expectativas sobre meu desempenho são claras.",
+    "p03_clareza": "3: Recebo orientações claras sobre como executar minhas atividades.",
+    "p04_clareza": "4: Sei a quem recorrer quando tenho dúvidas sobre minhas tarefas.",
+    "p05_clareza": "5: Mudanças nas minhas funções são comunicadas de forma clara.",
+
+    "p06_comunicacao": "6: A comunicação interna é clara e objetiva.",
+    "p07_comunicacao": "7: Recebo as informações necessárias para realizar meu trabalho adequadamente.",
+    "p08_comunicacao": "8: As informações importantes chegam em tempo hábil.",
+    "p09_comunicacao": "9: Sinto-me à vontade para expressar opiniões ou dificuldades.",
+    "p10_comunicacao": "10: Há abertura para diálogo no ambiente de trabalho.",
+
+    "p11_lideranca": "11: Meu gestor demonstra respeito no relacionamento com a equipe.",
+    "p12_lideranca": "12: Recebo feedbacks construtivos sobre meu trabalho.",
+    "p13_lideranca": "13: Meu gestor está disponível quando preciso de apoio.",
+    "p14_lideranca": "14: As decisões da liderança são comunicadas de forma transparente.",
+    "p15_lideranca": "15: Sinto-me tratado(a) de forma justa pela liderança.",
+
+    "p16_psico": "16: A falta de clareza ou falhas de comunicação já me causaram estresse no trabalho.",
+    "p17_psico": "17: O relacionamento com a liderança impacta meu bem-estar emocional.",
+    "p18_psico": "18: Já me senti sobrecarregado(a) devido à má comunicação ou orientação."
+}
+
 # --- FUNÇÃO PARA GERAR O PDF EM MEMÓRIA (ATUALIZADA COM PORCENTAGEM) ---
 def gerar_pdf(df_filtrado, filtro_nome):
     pdf = FPDF()
@@ -52,30 +78,48 @@ def gerar_pdf(df_filtrado, filtro_nome):
         grupo_porc_geral = (grupo_media_geral / 5.0) * 100
         
         for col in colunas:
+            
             if col in df_filtrado.columns:
-                pdf.set_font("Helvetica", "B", 11)
-                
-                # CÁLCULO 2: Média individual da pergunta e sua respectiva porcentagem
+
+                texto_pergunta = PERGUNTAS.get(col, col)
+
+                # Cálculos
                 media_pergunta = df_filtrado[col].mean() if total_respostas > 0 else 0
                 porc_pergunta = (media_pergunta / 5.0) * 100
-                
-                # Exibe indicador com Média e Porcentagem no PDF
-                pdf.cell(0, 6, tratar_texto(f"Indicador: {col.upper()} (Média: {media_pergunta:.2f} de 5.00 - {porc_pergunta:.1f}%)"), ln=True)
+
+                # ✅ PERGUNTA (destaque maior)
+                pdf.set_font("Helvetica", "B", 11)
+                pdf.multi_cell(0, 6, tratar_texto(texto_pergunta))
+
+                # ✅ MÉDIA (logo abaixo, mais limpo)
                 pdf.set_font("Helvetica", "", 10)
-                
+                pdf.cell(
+                    0,
+                    6,
+                    tratar_texto(f"Média: {media_pergunta:.2f} / 5.00 ({porc_pergunta:.1f}%)"),
+                    ln=True
+                )
+
+                pdf.set_font("Helvetica", "", 10)
+
+                # contagem das respostas
                 contagem = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
                 votos_reais = df_filtrado[col].value_counts().to_dict()
+
                 for o_id, qtd in votos_reais.items():
-                    if o_id in contagem: contagem[o_id] = qtd
-                
+                    if o_id in contagem:
+                        contagem[o_id] = qtd
+
                 detalhe_linha = "   "
                 for opcao in range(1, 6):
                     qtd_votos = contagem[opcao]
                     perc_votos = (qtd_votos / total_respostas) * 100 if total_respostas > 0 else 0
                     detalhe_linha += f"Op{opcao}: {qtd_votos} ({perc_votos:.1f}%) | "
-                
+
                 pdf.multi_cell(0, 6, tratar_texto(detalhe_linha))
-                pdf.ln(2)
+
+                pdf.ln(3)  # espacinho entre perguntas
+    
         
         # Rodapé do grupo atualizado com a nota consolidada e a porcentagem total
         pdf.set_font("Helvetica", "B", 11)
