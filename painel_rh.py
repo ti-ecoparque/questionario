@@ -78,31 +78,28 @@ def gerar_pdf(df_filtrado, filtro_nome):
         grupo_porc_geral = (grupo_media_geral / 5.0) * 100
         
         for col in colunas:
-            
             if col in df_filtrado.columns:
 
                 texto_pergunta = PERGUNTAS.get(col, col)
 
-                # Cálculos
                 media_pergunta = df_filtrado[col].mean() if total_respostas > 0 else 0
                 porc_pergunta = (media_pergunta / 5.0) * 100
 
-                # ✅ PERGUNTA (destaque maior)
+                # PERGUNTA
                 pdf.set_font("Helvetica", "B", 11)
-                pdf.multi_cell(0, 6, tratar_texto(texto_pergunta))
+                pdf.set_x(10)
+                pdf.multi_cell(190, 6, tratar_texto(texto_pergunta))
 
-                # ✅ MÉDIA (logo abaixo, mais limpo)
+                # MÉDIA
                 pdf.set_font("Helvetica", "", 10)
-                
+                pdf.set_x(10)
                 pdf.multi_cell(
-                    0,
+                    190,
                     6,
                     tratar_texto(f"Média: {media_pergunta:.2f} / 5.00 ({porc_pergunta:.1f}%)")
                 )
 
-                pdf.set_font("Helvetica", "", 10)
-
-                # contagem das respostas
+                # CONTAGEM
                 contagem = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
                 votos_reais = df_filtrado[col].value_counts().to_dict()
 
@@ -116,9 +113,10 @@ def gerar_pdf(df_filtrado, filtro_nome):
                     perc_votos = (qtd_votos / total_respostas) * 100 if total_respostas > 0 else 0
                     detalhe_linha += f"Op{opcao}: {qtd_votos} ({perc_votos:.1f}%) | "
 
-                pdf.multi_cell(0, 6, tratar_texto(detalhe_linha))
+                pdf.set_x(10)
+                pdf.multi_cell(190, 6, tratar_texto(detalhe_linha))
 
-                pdf.ln(3)  # espacinho entre perguntas
+                pdf.ln(3)
     
         
         # Rodapé do grupo atualizado com a nota consolidada e a porcentagem total
@@ -142,7 +140,7 @@ def gerar_pdf(df_filtrado, filtro_nome):
             respostas = df_filtrado[campo].dropna()
             if len(respostas) > 0:
                 for resp in respostas:
-                    pdf.multi_cell(0, 6, tratar_texto(f"- {resp}"))
+                    pdf.multi_cell(190, 6, tratar_texto(f"- {resp}"))
                     pdf.ln(2)
             else:
                 pdf.cell(0, 6, tratar_texto("Nenhuma resposta registrada."), ln=True)
