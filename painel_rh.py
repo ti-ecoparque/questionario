@@ -132,19 +132,36 @@ def gerar_pdf(df_filtrado, filtro_nome):
     pdf.line(10, pdf.get_y(), 200, pdf.get_y())
     pdf.ln(5)
     
-    for campo, t_pergunta in [('p19_aberta_texto', 'Pergunta 19 Aberta:'), ('p20_aberta_texto', 'Pergunta 20 Aberta:')]:
+    pdf.set_font("Helvetica", "B", 14)
+    pdf.cell(0, 10, tratar_texto("RESPOSTAS DAS PERGUNTAS ABERTAS"), ln=True)
+    pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+    pdf.ln(5)
+
+    perguntas_abertas = [
+        ('p19_aberta_texto', '19: O que poderia melhorar a clareza de funções no seu trabalho?'),
+        ('p20_aberta_texto', '20: O que poderia melhorar a comunicação ou o relacionamento com a liderança?')
+    ]
+
+    for campo, t_pergunta in perguntas_abertas:
         pdf.set_font("Helvetica", "B", 11)
-        pdf.cell(0, 7, tratar_texto(t_pergunta), ln=True)
+        pdf.set_x(10)
+        pdf.multi_cell(190, 7, tratar_texto(t_pergunta))
+
         pdf.set_font("Helvetica", "", 10)
+
         if campo in df_filtrado.columns:
             respostas = df_filtrado[campo].dropna()
+
             if len(respostas) > 0:
                 for resp in respostas:
+                    pdf.set_x(10)
                     pdf.multi_cell(190, 6, tratar_texto(f"- {resp}"))
-                    pdf.ln(2)
+                    pdf.ln(1)
             else:
                 pdf.cell(0, 6, tratar_texto("Nenhuma resposta registrada."), ln=True)
-        pdf.ln(3)
+
+        pdf.ln(4)
+
 
     return bytearray(pdf.output())
 
