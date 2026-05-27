@@ -93,11 +93,11 @@ def gerar_pdf(df_filtrado, filtro_nome):
 
                 # ✅ MÉDIA (logo abaixo, mais limpo)
                 pdf.set_font("Helvetica", "", 10)
-                pdf.cell(
+                
+                pdf.multi_cell(
                     0,
                     6,
-                    tratar_texto(f"Média: {media_pergunta:.2f} / 5.00 ({porc_pergunta:.1f}%)"),
-                    ln=True
+                    tratar_texto(f"Média: {media_pergunta:.2f} / 5.00 ({porc_pergunta:.1f}%)")
                 )
 
                 pdf.set_font("Helvetica", "", 10)
